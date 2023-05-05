@@ -1,1 +1,1 @@
-# human-resource
+# foosball-tournament
