@@ -1,9 +1,9 @@
 <template>
-
+<div id="app">
     <AppNavbar/>
     <router-view/>
     <AppFooter/>
-
+</div>
 </template>
 
 <script>
@@ -20,7 +20,4 @@ export default {
 </script>
 
 <style>
-#app {
-
-}
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <footer class="footer fixed-bottom">
+  <footer class="footer" :class="{'sticky-bottom': contentLargerThanViewport}">
     <div class="container">
       <ul class="nav justify-content-center border-bottom pb-2 mb-1">
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-muted">Home</a>
+          <a href="/" class="nav-link px-2 text-muted">Home</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link px-2 text-muted">Players</a>
@@ -28,10 +28,28 @@
 
 <script>
 export default {
-  name: "AppFooter.vue"
-}
+  name: "AppFooter.vue",
+  computed: {
+    contentLargerThanViewport() {
+      return (
+          document.body.clientHeight > window.innerHeight ||
+          document.documentElement.clientHeight > window.innerHeight
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
 
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
 </style>
