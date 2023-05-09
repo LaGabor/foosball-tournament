@@ -11,10 +11,10 @@
             <a class="nav-link" :class="{ active: isActive('/players') }" aria-current="page" :href="isActive('/players') ? 'javascript:void(0)' : '/players'">Players</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Teams</a>
+            <a class="nav-link" :class="{ active: isActive('/teams') }" aria-current="page" :href="isActive('/teams') ? 'javascript:void(0)' : '/teams'">Teams</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Tournaments</a>
+            <a class="nav-link" :class="{ active: isActive('/tournaments') }" aria-current="page" :href="isActive('/tournaments') ? 'javascript:void(0)' : '/tournaments'">Tournaments</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Games</a>

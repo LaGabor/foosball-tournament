@@ -6,13 +6,13 @@
           <a href="/" class="nav-link px-2 text-muted">Home</a>
         </li>
         <li class="nav-item">
-          <a href="/players" class="nav-link px-2 text-muted">Players</a>
+          <a :href="isActive('/players') ? 'javascript:void(0)' : '/players'" class="nav-link px-2 text-muted">Players</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-muted">Teams</a>
+          <a :href="isActive('/teams') ? 'javascript:void(0)' : '/teams'" class="nav-link px-2 text-muted">Teams</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-muted">Tournaments</a>
+          <a :href="isActive('/tournaments') ? 'javascript:void(0)' : '/tournaments'" class="nav-link px-2 text-muted">Tournaments</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link px-2 text-muted">Games</a>
@@ -37,6 +37,11 @@ export default {
       );
     },
   },
+  methods: {
+    isActive(route) {
+      return this.$route.path === route
+    }
+  }
 };
 </script>
 
