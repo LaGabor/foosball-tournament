@@ -6,13 +6,10 @@ class fetchUrl {
         try {
             const response = await axios.get(url,body)
             console.log("In fetch: ",url)
-            if (response.status >= 200 && response.status < 300) {
                 return response.data;
-            } else {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
         } catch (error) {
-            throw new Error(`Fetch error: ${error.message}`);
+            const errorMessage = error.response.data.message;
+            throw new Error(`${errorMessage}`);
         }
     }
 
@@ -20,14 +17,10 @@ class fetchUrl {
         try {
             const response = await axios.post(url,body)
             console.log("In POST fetch: ",url)
-
-            if (response.status >= 200 && response.status < 300) {
                 return response.data;
-            } else {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
         } catch (error) {
-            throw new Error(`Fetch error: ${error.message}`);
+            const errorMessage = error.response.data.message;
+            throw new Error(`${errorMessage}`);
         }
     }
 
@@ -35,22 +28,21 @@ class fetchUrl {
         try {
             const response = await axios.put(url,body)
             console.log("In PUT fetch: ",url)
-            if (response.status >= 200 && response.status < 300) {
                 return response.data;
-            } else {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
         } catch (error) {
-            throw new Error(`Fetch error: ${error.message}`);
+            const errorMessage = error.response.data.message;
+            throw new Error(`${errorMessage}`);
         }
     }
 
     static async delete(url,body) {
         try {
-            await axios.delete(url,body)
+            const response = await axios.delete(url,body)
             console.log("In DELETE fetch: ",url)
+            return response;
         } catch (error) {
-            console.log("In DELETE fetch: ",error.message)
+            const errorMessage = error.response.data.message;
+            throw new Error(`${errorMessage}`);
         }
     }
 }
