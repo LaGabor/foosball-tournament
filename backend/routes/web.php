@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/players',[PlayerController::class,'getPlayers']);
+Route::get('/teams',[TeamController::class,'getTeams']);
+Route::get('/players/free',[PlayerController::class,'getFreePlayers']);
+
+
+
+Route::post('/players/new',[PlayerController::class,'createNewPlayer']);
+Route::post('/teams/new',[TeamController::class,'createNewTeam']);
+
+
+
+
+
+
+
+
+
+
+
