@@ -1,4 +1,5 @@
 <template>
+  <EditModal :data="selectedTournament" editedThing ="Tournament"  @updateData="updateTournamentName" />
   <div class="container">
     <h2>New Tournament</h2>
     <form @submit.prevent="addChampionship">
@@ -18,52 +19,79 @@
     <p class=" d-flex justify-content-center">Tournaments not exist!</p>
   </div>
     <ul class="list-group mx-auto">
-      <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(tournament, index) in championships" :key="index">
+      <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(tournament, index) in tournaments" :key="index">
         {{ tournament.name }}
-        <button v-if="!tournament.is_started" type="button" class="btn btn-primary" @click="createGames(tournament)">Start Games</button>
-        <button v-if="tournament.is_started" type="button" class="btn btn-success" @click="seeGame(tournament)">Games</button>
-      </li>
+        <div class="buttons">
+          <button v-if="!tournament.is_started" type="button" class="btn btn-success" @click="createGames(tournament)">Start Games</button>
+          <button v-if="tournament.is_started" type="button" class="btn btn-success" @click="seeGame(tournament)">Games</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" @click="setSelectedTournament(tournament)">Edit</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+        </li>
     </ul>
   </div>
 </template>
 
 <script>
 import fetchUrl from "../components/Fetch"
+import EditModal from "@/components/EditModal.vue";
 export default {
   name: "TournamentView",
+  components: {EditModal},
   data() {
     return {
       tournamentName: '',
+      selectedTournament: '',
       tournaments: []
     };
   },
   async mounted() {
-    this.tournaments = await fetchUrl.get("api/tournaments");
+    this.tournaments = await fetchUrl.get("http://localhost:8000/tournaments");
   },
   methods: {
     async addChampionship() {
       try{
-        this.response = await fetchUrl.post("api/tournament/new",{"name":`${this.tournamentName}`});
-        this.tournaments= await fetchUrl.get("api/tournaments");
+        this.response = await fetchUrl.post("http://localhost:8000/tournaments/new",{"name":`${this.tournamentName}`});
+        this.tournaments= await fetchUrl.get("http://localhost:8000/tournaments");
       }catch (error){
-        alert("Tournament name Already Exist!")
+        alert(error.message)
       }finally {
-        this.championshipName = '';
+        this.tournamentName = '';
       }
     },
     async createGames(tournament) {
       try{
         console.log(tournament.id)
-        let response = await fetchUrl.put("api/tournament/start",{"tournamentId":`${tournament.id}`});
+        let response = await fetchUrl.put("http://localhost:8000/tournaments/start",{"tournamentId":`${tournament.id}`});
         console.log(response);
         tournament.is_started = true;
       }catch (error){
-        alert("Not Enough Team!")
+        alert(error.message)
       }
+    },
+     seeGame(tournament){
+       console.log(tournament)
+       alert("Not Implemented!")
+    },
+    setSelectedTournament(tournament) {
+      this.selectedTournament = tournament;
+    },
+    async updateTournamentName(newName) {
+      if(! this.isSame(newName)){
+        try {
+          await fetchUrl.put(`http://localhost:8000/tournaments/${this.selectedTournament.id}/edit`, { "name": `${newName}` });
+          this.selectedTournament.name = newName;
+        } catch (error) {
+          alert(error.message)
+        }
+      }else{
+        alert("Same name!")
+      }
+    },
+    isSame(newName){
+      if(newName === this.selectedTournament.name) return true;
+      return false;
     }
-  },
-  seeGame(tournament){
-    console.log(tournament);
   },
 }
 </script>

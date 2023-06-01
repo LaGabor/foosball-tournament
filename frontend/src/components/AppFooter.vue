@@ -15,7 +15,7 @@
           <a :href="isActive('/tournaments') ? 'javascript:void(0)' : '/tournaments'" class="nav-link px-2 text-muted">Tournaments</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-muted">Games</a>
+          <a :href="isActive('/games') ? 'javascript:void(0)' : '/games'" class="nav-link px-2 text-muted">Games</a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link px-2 text-muted">Top Lists</a>

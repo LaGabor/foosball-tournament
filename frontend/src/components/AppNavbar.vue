@@ -17,7 +17,7 @@
             <a class="nav-link" :class="{ active: isActive('/tournaments') }" aria-current="page" :href="isActive('/tournaments') ? 'javascript:void(0)' : '/tournaments'">Tournaments</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Games</a>
+            <a class="nav-link" :class="{ active: isActive('/games') }" aria-current="page" :href="isActive('/games') ? 'javascript:void(0)' : '/games'">Games</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Toplist</a>

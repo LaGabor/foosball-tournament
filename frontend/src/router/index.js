@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import PlayersView from "@/views/PlayersView.vue";
 import TournamenstView from "@/views/TournamentsView.vue";
 import TeamsView from "@/views/TeamsView.vue";
+import GamesView from "@/views/GamesView.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: '/tournaments',
         name:'tournaments',
         component: TournamenstView
+    },
+    {
+        path: '/games',
+        name:'games',
+        component: GamesView
     },
 ]
 

@@ -1,4 +1,5 @@
 <template>
+  <EditModal :data="selectedTeam" editedThing ="Team" @updateData="updateTeamName"/>
   <div class="container">
     <h2>New Team</h2>
     <form @submit.prevent="addTeam">
@@ -9,14 +10,14 @@
         </div>
         <div class="col-md-3 form-group">
           <label for="player1">Player 1</label>
-          <select class="form-control" id="player1" v-model="player1">
+          <select class="form-control" id="player1" v-model="player1Id">
             <option value="">-- Select a player --</option>
             <option v-for="player in freePlayers" :key="player.id" :value="player.id">{{ player.name }}</option>
           </select>
         </div>
         <div class="col-md-3 form-group">
           <label for="player2">Player 2</label>
-          <select class="form-control" id="player2" v-model="player2" required>
+          <select class="form-control" id="player2" v-model="player2Id" required>
             <option value="">-- Select a player --</option>
             <option v-for="player in freePlayers" :key="player.id" :value="player.id">{{ player.name }}</option>
           </select>
@@ -28,7 +29,6 @@
     </form>
     <hr>
     <h2 >Teams</h2>
-      <li class="list-group-item d-flex justify-content-center" v-for="(team, index) in teams" :key="index">{{ team.name }} : {{team.players[0].name}} and {{team.players[1].name}}</li>
     <div v-if="teams.length === 0">
       <p class=" d-flex justify-content-center">Teams not exist!</p>
     </div>
@@ -37,7 +37,8 @@
       <tr><th>Team Name</th><th>Players</th><th></th></tr>
       </thead>
       <tbody>
-      <tr v-for="(team, index) in teams" :key="index"><td>{{ team.name }}</td><td>{{ team.players }}</td><td class="d-flex justify-content-end"><button type="button" class="btn btn-primary">Edit</button>
+      <tr v-for="(team, index) in teams" :key="index"><td>{{ team.name }}</td><td>{{team.players[0].name}} and {{team.players[1].name}} </td>
+        <td class="d-flex justify-content-end"><button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#editModal" @click="setSelectedTeam(team)">Edit</button>
         <button type="button" class="btn btn-danger">Delete</button></td></tr>
       </tbody>
     </table>
@@ -46,30 +47,33 @@
 
 <script>
 import fetchUrl from "../components/Fetch"
+import EditModal from "@/components/EditModal.vue";
 export default {
   name: "TeamsView",
+  components: {EditModal},
   data() {
     return {
       teamName: '',
       player2Name: '',
       player1Name: '',
-      player1: '',
-      player2: '',
+      player1Id: '',
+      player2Id: '',
       teams: [],
       freePlayers: [],
+      selectedTeam: ''
     };
   },
   async mounted() {
 
-    this.teams = await fetchUrl.get("api/teams");
-    this.freePlayers = await fetchUrl.get("api/players/free");
+    this.teams = await fetchUrl.get("http://localhost:8000/teams");
+    this.freePlayers = await fetchUrl.get("http://localhost:8000/players/free");
   },
   methods: {
     async addTeam() {
       if (this.checkNames() && this.checkTeamName()) {
-        let response = await fetchUrl.post("api/team/new", {
+        let response = await fetchUrl.post("http://localhost:8000/teams/new", {
           "name": `${this.teamName}`,
-          "playersId": [this.player1, this.player2]
+          "playersId": [this.player1Id, this.player2Id]
         });
         try {
           this.teams.push({
@@ -77,16 +81,16 @@ export default {
             "players": [{"name": response[0].players[0].name}, {"name": response[0].players[1].name}]
           });
         } catch (error) {
-          alert(error)
+          alert(error.message)
         }
-        this.freePlayers = await fetchUrl.get("api/players/free");
+        this.freePlayers = await fetchUrl.get("http://localhost:8000/players/free");
       }
       this.teamName = '';
-      this.player1 = '';
-      this.player2 = '';
+      this.player1Id = '';
+      this.player2Id = '';
     },
     checkNames() {
-      if (this.player1 === this.player2) {
+      if (this.player1Id === this.player2Id) {
         alert("Names cant be identical!")
         return false;
       }
@@ -103,7 +107,25 @@ export default {
       console.log(teamNameDontExist)
       return teamNameDontExist;
     },
-
+    setSelectedTeam(team) {
+      this.selectedTeam = team;
+    },
+    async updateTeamName(newName) {
+      if(! this.isSame(newName)){
+        try {
+          await fetchUrl.put(`http://localhost:8000/teams/${this.selectedTeam.id}/edit`, { "name": `${newName}` });
+          this.selectedTeam.name = newName;
+        } catch (error) {
+          alert(error.message)
+        }
+      }else{
+        alert("Same name!")
+      }
+    },
+    isSame(newName){
+      if(newName === this.selectedTeam.name) return true;
+      return false;
+    },
   }
 }
 </script>
